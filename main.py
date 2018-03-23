@@ -32,7 +32,7 @@ def main():
 
     logger.info("Entering loop")
 
-    update.start_polling()
+    updater.start_polling()
 
 
 if __name__ == "__main__":
