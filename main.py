@@ -14,11 +14,21 @@ handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s -
 logger.addHandler(handler)
 
 
+def start(bot, update):
+    """
+    Handler for the /start command. Send instructions
+    """
+    logger.info("Received /start. Chat ID:" + str(update.message.chat_id))
+    logger.info("Sending instructions")
+
+    bot.send_message(chat_id=update.message.chat_id, text="Hello. Type /register to start receiving notifications about light changes")
+
 def register(bot, update):
     """
     Register a new user to receive light events
     """
-    logger.info("Received /register")
+    logger.info("Received /register. Chat ID: " + str(update.message.chat_id))
+
     bot.send_message(chat_id=update.message.chat_id, text="Not implemented")
 
 
@@ -31,8 +41,10 @@ def main():
     updater = Updater(token=token)
     dispatcher = updater.dispatcher
 
-    # Register the command handler
+    # Register the command handlers
+    start_handler = CommandHandler('start', start)
     register_handler = CommandHandler('register', register)
+    dispatcher.add_handler(start_handler)
     dispatcher.add_handler(register_handler)
 
     logger.info("Entering loop")
