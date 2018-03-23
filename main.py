@@ -8,10 +8,12 @@ from time import sleep
 
 # Setup logging
 
+LOG_LEVEL = logging.DEBUG
+
 logger = logging.getLogger("lightbot")
-logger.setLevel(logging.INFO)
+logger.setLevel(LOG_LEVEL)
 handler = logging.StreamHandler()
-handler.setLevel(logging.INFO)
+handler.setLevel(LOG_LEVEL)
 handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
 logger.addHandler(handler)
 
@@ -36,13 +38,14 @@ def register(bot, update):
 
 
 URL = "http://castor.cc.tut.fi/lights.php"
+LIGHTS_OFF = "7d13e0469c6d61c36814fff4a3b3cafa1d34a3fa"
 
-def get():
+def get_light_state():
     r = requests.get(URL)
     h = hashlib.sha1()
     h.update(r.text.encode())
 
-    return h.hexdigest()
+    return h.hexdigest() != LIGHTS_OFF
 
 
 def main():
@@ -64,6 +67,12 @@ def main():
 
     updater.start_polling()
 
+    while True:
+        lights = get_light_state()
+        logger.debug("Lights: " + str(lights))
+        sleep(60)
+
+    updater.stop()
 
 if __name__ == "__main__":
     main()
