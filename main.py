@@ -4,21 +4,25 @@ from telegram.ext import Updater, CommandHandler
 from time import sleep
 
 
+# Setup logging
+
+logger = logging.getLogger("lightbot")
+logger.setLevel(logging.INFO)
+handler = logging.StreamHandler()
+handler.setLevel(logging.INFO)
+handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+logger.addHandler(handler)
+
+
 def register(bot, update):
     """
     Register a new user to receive light events
     """
+    logger.info("Received /register")
     bot.send_message(chat_id=update.message.chat_id, text="Not implemented")
 
 
 def main():
-    logger = logging.getLogger("lightbot")
-    logger.setLevel(logging.INFO)
-    handler = logging.StreamHandler()
-    handler.setLevel(logging.INFO)
-    handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
-    logger.addHandler(handler)
-
     logger.info("Starting up")
 
     token = os.environ['TELEGRAM_TOKEN']
