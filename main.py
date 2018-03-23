@@ -13,6 +13,7 @@ def register(bot, update):
 
 def main():
     logger = logging.getLogger("lightbot")
+    logger.setLevel(logging.INFO)
     handler = logging.StreamHandler()
     handler.setLevel(logging.INFO)
     handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
