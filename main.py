@@ -34,6 +34,7 @@ def start(bot, update):
 
     bot.send_message(chat_id=update.message.chat_id, text="Hello. Type /register to start receiving notifications about light changes")
 
+registered = []
 
 def register(bot, update):
     """
@@ -41,7 +42,8 @@ def register(bot, update):
     """
     logger.info("Received /register. Chat ID: " + str(update.message.chat_id))
 
-    bot.send_message(chat_id=update.message.chat_id, text="Not implemented")
+    registered.append(update.message.chat_id)
+    bot.send_message(chat_id=update.message.chat_id, text="You will now receive events until the bot is restarted (TBF)")
 
 # Lamp polling
 
@@ -53,8 +55,12 @@ def get_light_state():
     return h.hexdigest() != LIGHTS_OFF
 
 
-def lights_change(new_state):
+def lights_change(new_state, bot):
     logger.info("Lights state changed to: " + str(new_state))
+    for chat in registered:
+        logger.info("Sending message to " + str(chat))
+        bot.send_message(chat_id=chat, text="Lights changed to: " + str(new_state))
+
 
 # Main loop
 
@@ -87,7 +93,7 @@ def main():
             light_state = new_state
         else:
             if new_state is not light_state:
-                lights_change(new_state)
+                lights_change(new_state, updater.bot)
                 light_state = new_state
 
         sleep(POLL_INTERVAL)
