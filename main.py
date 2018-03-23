@@ -52,6 +52,10 @@ def get_light_state():
 
     return h.hexdigest() != LIGHTS_OFF
 
+
+def lights_change(new_state):
+    logger.info("Lights state changed to: " + str(new_state))
+
 # Main loop
 
 def main():
@@ -73,9 +77,19 @@ def main():
 
     updater.start_polling()
 
+    light_state = None
+
     while True:
-        lights = get_light_state()
-        logger.debug("Lights: " + str(lights))
+        new_state = get_light_state()
+        logger.debug("Lights: " + str(new_state))
+
+        if light_state is None:
+            light_state = new_state
+        else:
+            if new_state is not light_state:
+                lights_change(new_state)
+                light_state = new_state
+
         sleep(POLL_INTERVAL)
 
     updater.stop()
