@@ -8,5 +8,5 @@ ENV LANG=en_US.utf-8 LC_ALL=en_US.utf-8
 COPY ./ /app
 WORKDIR /app
 
-CMD ["sh", "start.sh"]
+CMD ["python3", "-u", "main.py"]
 
