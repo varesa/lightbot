@@ -5,10 +5,16 @@ import requests
 from telegram.ext import Updater, CommandHandler
 from time import sleep
 
-
-# Setup logging
+# Constants
 
 LOG_LEVEL = logging.DEBUG
+
+URL = "http://castor.cc.tut.fi/lights.php"
+LIGHTS_OFF = "7d13e0469c6d61c36814fff4a3b3cafa1d34a3fa"
+
+POLL_INTERVAL = 180
+
+# Setup logging
 
 logger = logging.getLogger("lightbot")
 logger.setLevel(LOG_LEVEL)
@@ -17,6 +23,7 @@ handler.setLevel(LOG_LEVEL)
 handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
 logger.addHandler(handler)
 
+# Message handlers
 
 def start(bot, update):
     """
@@ -36,9 +43,7 @@ def register(bot, update):
 
     bot.send_message(chat_id=update.message.chat_id, text="Not implemented")
 
-
-URL = "http://castor.cc.tut.fi/lights.php"
-LIGHTS_OFF = "7d13e0469c6d61c36814fff4a3b3cafa1d34a3fa"
+# Lamp polling
 
 def get_light_state():
     r = requests.get(URL)
@@ -47,6 +52,7 @@ def get_light_state():
 
     return h.hexdigest() != LIGHTS_OFF
 
+# Main loop
 
 def main():
     logger.info("Starting up")
@@ -70,7 +76,7 @@ def main():
     while True:
         lights = get_light_state()
         logger.debug("Lights: " + str(lights))
-        sleep(60)
+        sleep(POLL_INTERVAL)
 
     updater.stop()
 
