@@ -1,5 +1,7 @@
-import os
+import hashlib
 import logging
+import os
+import requests
 from telegram.ext import Updater, CommandHandler
 from time import sleep
 
@@ -23,6 +25,7 @@ def start(bot, update):
 
     bot.send_message(chat_id=update.message.chat_id, text="Hello. Type /register to start receiving notifications about light changes")
 
+
 def register(bot, update):
     """
     Register a new user to receive light events
@@ -30,6 +33,16 @@ def register(bot, update):
     logger.info("Received /register. Chat ID: " + str(update.message.chat_id))
 
     bot.send_message(chat_id=update.message.chat_id, text="Not implemented")
+
+
+URL = "http://castor.cc.tut.fi/lights.php"
+
+def get():
+    r = requests.get(URL)
+    h = hashlib.sha1()
+    h.update(r.text.encode())
+
+    return h.hexdigest()
 
 
 def main():
