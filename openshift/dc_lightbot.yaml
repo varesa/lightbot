@@ -40,8 +40,8 @@ spec:
         - name: TELEGRAM_TOKEN
           valueFrom:
             secretKeyRef:
-              key: telegram-token
-              name: token
+              name: telegram-token
+              key: token
         resources: {}
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
