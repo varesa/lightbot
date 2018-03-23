@@ -12,7 +12,13 @@ def register(bot, update):
 
 
 def main():
-    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+    logger = logging.getLogger("lightbot")
+    handler = logging.StreamHandler()
+    handler.setLevel(logging.INFO)
+    handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+    logger.addHandler(handler)
+
+    logger.info("Starting up")
 
     token = os.environ['TELEGRAM_TOKEN']
 
@@ -23,6 +29,8 @@ def main():
     # Register the command handler
     register_handler = CommandHandler('register', register)
     dispatcher.add_handler(register_handler)
+
+    logger.info("Entering loop")
 
     update.start_polling()
 
